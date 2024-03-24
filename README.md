@@ -5,7 +5,7 @@ Cubcopy is a C library for copying files from one place to another (without pres
 **Important Note:**
 It is worth repeating with emphasis that this is a crude, tiny and simple  implementation and it is not intended for general use in its current form.
 
-## Example
+## Usage
 
 Below is a very simple example of how to use Cubcopy.
 
@@ -25,3 +25,7 @@ int main(int argc, char **argv) {
 }
 
 ```
+
+## Library
+
+You want to use Cubcopy? 🤔 Well, OK  - The best package manager is a good ol' copy-paste. Add the source code to your project and #include it, then you're good to go.
