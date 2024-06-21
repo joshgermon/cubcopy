@@ -7,6 +7,18 @@
 #include <time.h>
 #include <unistd.h>
 
+#define MAX_PATH_LENGTH 1024
+#define DEFAULT_CHUNK_SIZE 8096
+#define INITIAL_CAPACITY 1024
+
+struct FileNode {
+  int size;
+  char *file_path;
+  char *dest_path;
+  char *file_name;
+  int is_dir;
+};
+
 struct FileNodeArray {
   struct FileNode *nodes;
   int current;
@@ -20,8 +32,8 @@ int file_matches_filter(const char *filename, struct CopyOpts *opts);
 struct FileNodeArray *init_file_node_array() {
   struct FileNodeArray *array = malloc(sizeof(struct FileNodeArray));
   array->length = 0;
-  array->size = INITIAL_CAPACITY;
   array->current = 0;
+  array->size = INITIAL_CAPACITY;
   array->nodes = malloc(array->size * sizeof(struct FileNode));
   return array;
 }
@@ -175,44 +187,13 @@ int copy_contents(struct FileNodeArray *copy_queue) {
   return 0;
 }
 
-int main(int argc, char *argv[]) {
-  // Example usage
-  struct CopyOpts opts = {.include_only = NULL, .exclude = NULL};
-
-  if (argc != 3) {
-    printf("Usage: %s <source_dir> <target_dir>\n", argv[0]);
-    return 1;
-  }
-
-  // TODO: Validate directories are valid
-  char *source_dir = argv[1];
-  char *target_dir = argv[2];
-
-  printf("============\n");
-  printf("Source directory: %s\n", source_dir);
-  printf("Target directory: %s\n", target_dir);
-  printf("============\n");
-
-  clock_t start_time = clock();
-
-  printf("Discovering files to copy...\n");
+int cc_copy(char *source_path, char *dest_path, struct CopyOpts opts) {
   struct FileNodeArray *copy_queue = init_file_node_array();
-  if (discover_and_create_copy_queue(copy_queue, source_dir, target_dir, &opts) == -1) {
+  if (discover_and_create_copy_queue(copy_queue, source_path, dest_path, &opts) == -1) {
     free_file_node_array(copy_queue);
     return 1;
   }
 
-  printf("Discovered %d files to copy\n", copy_queue->length);
-  // print_file_node_array(copy_queue);
-
-  // Copy queue is ready, now we can start copying files
-  copy_contents(copy_queue);
-
-  clock_t end_time = clock();
-  double time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
-
-  printf("============\n");
-  printf("Total time taken: %.6f seconds\n", time_taken);
-  printf("============\n");
-  return 0;
+  return copy_contents(copy_queue);
 }
+
