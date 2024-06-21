@@ -172,7 +172,6 @@ int copy_file(const char *src_path, const char *dest_path) {
 int copy_contents(struct FileNodeArray *copy_queue) {
   struct FileNode *current_node = next_file_node(copy_queue);
   while (current_node != NULL) {
-    // printf("Copying %s to %s\n", current_node->file_path, current_node->dest_path);
     if (current_node->is_dir) {
       if(mkdir(current_node->dest_path, 0755) != 0) {
         perror("mkdir");

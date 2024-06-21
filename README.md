@@ -1,9 +1,9 @@
 # Cubcopy 🧸
 
-Cubcopy is a C library for copying files from one place to another (without preserving directory structure). It is a highly simplified and barebones implementation of a file copying tool. It is currently created for a very specific and specialised use case within [Cubby](https://github.com/joshgermon/cubby), where directory structure is not required to be preserved or any other metadata (permissions, etc); However flexibility in filtering items and organisational configurations are a priority.
+Cubcopy is a C library for copying files from one place to another. It is a highly simplified and barebones implementation of a file copying library. It is currently created for a very specific and specialised use case within [Cubby](https://github.com/joshgermon/cubby) to copy a lot of medium-size files and where a hardened and bullet-proof library is not required. However flexibility in filtering items and organisational configurations are a priority including hooks into the copying process.
 
 > \[!IMPORTANT]\
-> It is worth repeating with emphasis that this is a crude, tiny and simple  implementation and it is not intended for general use in its current form.
+> It is worth repeating with emphasis that this is a crude, tiny and simple implementation and was created to solve a specific problem in a hobby project
 
 ## Usage
 
@@ -17,11 +17,13 @@ int main(int argc, char **argv) {
     char *src = argv[1];
     char *dest = argv[2];
 
-    BackupOpts opts = {
-        .include_only = "pdf"
+    CopyOpts opts = {
+        .include_only = "pdf" // Copies only .pdf files
     };
 
-    return backup_directory(src, dest);
+    // Recursively copies source to directory
+    // Note: opts not required, cc_copy(src, dest, NULL);
+    return cc_copy(src, dest, opts);
 }
 
 ```
